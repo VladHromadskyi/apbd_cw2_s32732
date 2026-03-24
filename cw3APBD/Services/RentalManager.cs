@@ -60,4 +60,35 @@ public class RentalManager
         
         Console.WriteLine($"Item {item.Name} returned. Penalty: {penalty:0.00} PLN");
     }
+    
+    public List<Rental> GetOverdueRentals()
+    {
+        return _rentals.Where(r => r.IsOverdue()).ToList();
+    }
+    public List<Rental> GetUserHistory(Guid userId)
+    {
+        return _rentals.Where(r => r.UserId == userId).ToList();
+    }
+    public void PrintStatusReport()
+    {
+        Console.WriteLine("\n=================================");
+        Console.WriteLine("     SYSTEM STATUS REPORT");
+        Console.WriteLine("=================================");
+    
+        Console.WriteLine($"Total Equipment:   {_equipmentList.Count}");
+        Console.WriteLine($"Available items:   {_equipmentList.Count(e => e.IsAvailable)}");
+        Console.WriteLine($"Currently rented:  {_equipmentList.Count(e => !e.IsAvailable)}");
+    
+        var overdueRentals = GetOverdueRentals();
+        if (overdueRentals.Count > 0)
+        {
+            Console.WriteLine($"WARNING: {overdueRentals.Count} overdue rental(s) detected!");
+        }
+        else
+        {
+            Console.WriteLine("Status: No overdue rentals. Everything is fine.");
+        }
+    
+        Console.WriteLine("=================================\n");
+    }
 }
