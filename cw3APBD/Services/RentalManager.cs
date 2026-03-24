@@ -34,11 +34,13 @@ public class RentalManager
         int activeRentalsCount = _rentals.Count(r => r.UserId == user.Id && r.ReturnDate == null);
         if (activeRentalsCount >= user.MaxRentalLimit)
         {
-            throw new InvalidOperationException($"Limit exceeded! {user.FirstName} can take maks {user.MaxRentalLimit} items.");
+            Console.WriteLine($"!!! LIMIT REACHED for {user.FirstName}: Cannot rent {equipment.Name}. Max limit is {user.MaxRentalLimit}.");
+            return;
         }
 
         equipment.IsAvailable = false;
         Rental rental = new Rental(user.Id, equipment.Id, days);
+        _rentals.Add(rental);
         Console.WriteLine($"Success: {equipment.Name} was given to {user.LastName}. Return due to: {rental.DueDate:dd.MM.yyyy}");
     }
 
